@@ -4,10 +4,14 @@ fields:
  # BASIC INFORMATION SECTION
  - Original Agreement Date: original_agreement_date
    datatype: date
- - Landlord/Licensor Entity: landlord_entity
+ - Property Owner Entity: landlord_entity
    datatype: text
- - Tenant/Licensee Entity: tenant_entity
+   help: |
+     Enter the name of the property owner (will be referred to as Licensor or Lessor based on agreement type).
+ - Property User Entity: tenant_entity
    datatype: text
+   help: |
+     Enter the name of the party using the property (will be referred to as Licensee or Lessee based on agreement type).
  - Premises Address: premises_address
    datatype: text
    
@@ -17,16 +21,9 @@ fields:
    choices:
      - License
      - Lease
- - "Landlord Role": landlord_role_choice  
-   datatype: radio
-   choices:
-     - Licensor
-     - Lessor
- - "Tenant Role": tenant_role_choice
-   datatype: radio
-   choices:
-     - Licensee
-     - Lessee
+   help: |
+     Select "License" for licensing agreements (Licensor/Licensee) or "Lease" for leasing agreements (Lessor/Lessee).
+     The appropriate party terminology will be automatically applied.
    
  # BOOLEAN DECISION POINTS
  - "Does this agreement involve a guarantor?": good_guy_guaranty_yn

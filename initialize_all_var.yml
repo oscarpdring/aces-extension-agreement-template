@@ -10,14 +10,18 @@ code: |
    need(tenant_entity)
    need(premises_address)
    
-   # Set choice variables
+   # Set choice variables and auto-assign roles
    need(agreement_type_choice)
-   need(landlord_role_choice)
-   need(tenant_role_choice)
    agreement_type = agreement_type_choice
    agreement_type_lower = agreement_type_choice.lower()
-   landlord_role = landlord_role_choice  
-   tenant_role = tenant_role_choice
+   
+   # Automatically set party roles based on agreement type
+   if agreement_type_choice == "License":
+     landlord_role = "Licensor"
+     tenant_role = "Licensee"
+   else:  # agreement_type_choice == "Lease"
+     landlord_role = "Lessor"
+     tenant_role = "Lessee"
    
    # STEP 2: PROCESS CONDITIONAL LOGIC
    need(good_guy_guaranty_yn)
