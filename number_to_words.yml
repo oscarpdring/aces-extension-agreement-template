@@ -1,0 +1,8 @@
+---
+code: |
+  def number_to_words(n):
+    from num2words import num2words
+    words = num2words(n)
+    words = words.replace(' ', '\u00A0')  # Non-breaking spaces for Word
+    return words
+---

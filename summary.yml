@@ -1,0 +1,25 @@
+---
+code: |
+  from docassemble.base.util import DAFile
+
+  # Step 1: Create a DAFile object
+  interview_summary = DAFile()
+  interview_summary.initialize(filename="interview_summary.txt")
+
+  # Step 2: Retrieve all interview variables dynamically
+  interview_vars = dict(globals())
+
+  # Step 3: Filter out system variables
+  exclude_vars = ["interview_summary", "__builtins__", "__name__", "__doc__", "__package__", "__loader__", "__spec__"]
+  filtered_vars = {k: v for k, v in interview_vars.items() if k not in exclude_vars and not k.startswith("_")}
+
+  # Step 4: Format data and ensure it's not empty
+  if filtered_vars:
+      summary_content = "\n".join([f"{var}: {value}" for var, value in filtered_vars.items()])
+  else:
+      summary_content = "No responses recorded."
+
+  # Step 5: Write to the text file
+  interview_summary.write(summary_content)
+  interview_summary.commit()
+---

@@ -1,0 +1,24 @@
+---
+metadata: 
+  title: |
+     Extension Agreement Generator
+
+---
+include:
+  - authentication.yml 
+  - modules.yml
+  - config.yml
+  - number_to_words.yml
+  - rent_schedule_generator.yml
+  - initialize_all_var.yml        # CRITICAL: Variable processing hub
+  - questions.yml                 # CRITICAL: All user questions
+  - attaching_mandatory_docx.yml
+  - summary.yml
+  - email_function.yml
+  - set_tagging.yml
+
+---
+code: | 
+  if all_fields_complete:
+    final_document
+---

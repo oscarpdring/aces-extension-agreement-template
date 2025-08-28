@@ -1,0 +1,147 @@
+---
+mandatory: True
+code: |
+ if not defined('user_approves'):
+
+   
+   # STEP 1: COLLECT ALL BASIC INPUTS
+   need(original_agreement_date)
+   need(landlord_entity)
+   need(tenant_entity)
+   need(premises_address)
+   
+   # Set choice variables
+   need(agreement_type_choice)
+   need(landlord_role_choice)
+   need(tenant_role_choice)
+   agreement_type = agreement_type_choice
+   agreement_type_lower = agreement_type_choice.lower()
+   landlord_role = landlord_role_choice  
+   tenant_role = tenant_role_choice
+   
+   # STEP 2: PROCESS CONDITIONAL LOGIC
+   need(good_guy_guaranty_yn)
+   if good_guy_guaranty_yn:
+     need(guarantor_entity)
+   else:
+     guarantor_entity = ""
+   
+   need(extending_term_yn)
+   if extending_term_yn:
+     need(extension_expiration_date)
+   else:
+     extension_expiration_date = None
+   
+   need(modifying_equipment_yn)
+   if modifying_equipment_yn:
+     need(equipment_removal_yn)
+     need(equipment_installation_yn)
+     need(equipment_upgrade_yn)
+     
+     if equipment_removal_yn:
+       need(equipment_removal_details)
+     else:
+       equipment_removal_details = ""
+       
+     if equipment_installation_yn:
+       need(equipment_installation_details)
+     else:
+       equipment_installation_details = ""
+       
+     if equipment_upgrade_yn:
+       need(equipment_upgrade_details)
+     else:
+       equipment_upgrade_details = ""
+   else:
+     equipment_removal_yn = False
+     equipment_installation_yn = False
+     equipment_upgrade_yn = False
+     equipment_removal_details = ""
+     equipment_installation_details = ""
+     equipment_upgrade_details = ""
+   
+   need(modifying_rent_yn)
+   if modifying_rent_yn:
+     need(applicable_percentage_amount)
+     need(gross_sales_breakpoint_amount)
+     need(reporting_days_after_month)
+     reporting_days_after_month = int(reporting_days_after_month)
+     gross_sales_breakpoint_amount_decimal = f"${gross_sales_breakpoint_amount:,.2f}"
+     reporting_days_after_month_words = number_to_words(reporting_days_after_month)
+   else:
+     applicable_percentage_amount = 0
+     gross_sales_breakpoint_amount = 0
+     reporting_days_after_month = 0
+     gross_sales_breakpoint_amount_decimal = "$0.00"
+     reporting_days_after_month_words = "zero"
+   
+   need(rent_schedule_yn)
+   if rent_schedule_yn:
+     need(rent_annual_amounts)
+     rent_schedule_formatted = create_rent_schedule(rent_annual_amounts, original_agreement_date.year)
+   else:
+     rent_annual_amounts = ""
+     rent_schedule_formatted = ""
+   
+   need(modifying_minimum_compensation_yn)
+   if modifying_minimum_compensation_yn:
+     need(minimum_compensation_per_machine_per_day)
+     minimum_compensation_per_machine_per_day_decimal = f"${minimum_compensation_per_machine_per_day:,.2f}"
+   else:
+     minimum_compensation_per_machine_per_day = 0
+     minimum_compensation_per_machine_per_day_decimal = "$0.00"
+   
+   need(minimum_compensation_increase_yn)
+   if minimum_compensation_increase_yn:
+     need(percentage_increase_amount)
+     need(compensation_increase_date)
+     need(machine_type_example)
+     need(original_meter_price)
+     need(new_meter_price)
+     percentage_increase_amount_words = number_to_words(int(percentage_increase_amount))
+     original_meter_price_decimal = f"${original_meter_price:,.2f}"
+     new_meter_price_decimal = f"${new_meter_price:,.2f}"
+   else:
+     percentage_increase_amount = 0
+     compensation_increase_date = None
+     machine_type_example = ""
+     original_meter_price = 0
+     new_meter_price = 0
+     percentage_increase_amount_words = "zero"
+     original_meter_price_decimal = "$0.00"
+     new_meter_price_decimal = "$0.00"
+   
+   need(improvements_yn)
+   if improvements_yn:
+     need(work_to_be_done)
+   else:
+     work_to_be_done = ""
+   
+   need(real_estate_taxes_yn)
+   if real_estate_taxes_yn:
+     need(tax_base_begin_date)
+     need(tax_base_end_date)
+     need(tax_percentage_amount)
+     tax_percentage_amount_words = number_to_words(int(tax_percentage_amount))
+   else:
+     tax_base_begin_date = None
+     tax_base_end_date = None
+     tax_percentage_amount = 0
+     tax_percentage_amount_words = "zero"
+
+   # STEP 3: CALCULATE DERIVED VALUES
+   # All currency formatting already handled above
+   
+   # STEP 4: PROCESS COMPLEX DATA
+   # Rent schedule already processed above
+   
+   # STEP 5: DATE CALCULATIONS
+   # Extension dates already handled above
+   
+   # STEP 6: DOCUMENT SELECTION LOGIC
+   docs_to_show = [extension_agreement_doc]
+   
+   # STEP 7: COMPLETION FLAG
+   need(session_tagging_complete)
+   all_fields_complete = True
+---

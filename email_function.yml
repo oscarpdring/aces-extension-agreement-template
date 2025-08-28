@@ -1,0 +1,186 @@
+---
+modules:
+  - docassemble.base.util
+---
+code: |
+  import os
+  def format_document_list(docs):
+    doc_names = []
+    for doc in docs:
+        if hasattr(doc, 'info'):
+            doc_names.append(doc.info.get('name', 'Document'))
+        elif hasattr(doc, 'filename'):
+            doc_names.append(os.path.splitext(doc.filename)[0])
+        else:
+            doc_names.append('Document')
+    return doc_names
+
+  attachment_list = format_document_list(docs_to_show)
+
+  def get_equipment_list(equipment_text):
+    if not equipment_text:
+        return []
+    return [item.strip() for item in equipment_text.split('\n') if item.strip()]
+
+  equipment_removal_list = get_equipment_list(equipment_removal_details)
+  equipment_installation_list = get_equipment_list(equipment_installation_details)
+  equipment_upgrade_list = get_equipment_list(equipment_upgrade_details)
+---
+template: email_template
+subject: |
+  Extension Agreement for ${premises_address}, ${landlord_entity}
+content: |
+  <strong><u>Date:</u></strong> ${today()}
+  
+  <strong><u>AGREEMENT INFORMATION:</u></strong>
+  <ul>
+    <li>Original Agreement Date: ${original_agreement_date}</li>
+    <li>Agreement Type: ${agreement_type}</li>
+    <li>Premises Address: ${premises_address}</li>
+  </ul>
+  
+  <strong><u>PARTIES:</u></strong>
+  <ul>
+    <li>${landlord_role}: ${landlord_entity}</li>
+    <li>${tenant_role}: ${tenant_entity}</li>
+    % if good_guy_guaranty_yn:
+    <li>Guarantor: ${guarantor_entity}</li>
+    % endif
+  </ul>
+  
+  <strong><u>EXTENSION TERMS:</u></strong>
+  <ul>
+    <li>Term Extension: ${word(yesno(extending_term_yn))}</li>
+    % if extending_term_yn:
+    <li>New Expiration Date: ${extension_expiration_date}</li>
+    % endif
+  </ul>
+
+  <strong><u>EQUIPMENT MODIFICATIONS:</u></strong>
+  <ul>
+    <li>Equipment Changes: ${word(yesno(modifying_equipment_yn))}</li>
+    % if modifying_equipment_yn:
+    <li>Equipment Removal: ${word(yesno(equipment_removal_yn))}</li>
+    <li>Equipment Installation: ${word(yesno(equipment_installation_yn))}</li>
+    <li>Equipment Upgrades: ${word(yesno(equipment_upgrade_yn))}</li>
+    % endif
+  </ul>
+
+  <strong><u>RENT MODIFICATIONS:</u></strong>
+  <ul>
+    <li>Rent Structure Changes: ${word(yesno(modifying_rent_yn))}</li>
+    % if modifying_rent_yn:
+    <li>Applicable Percentage: ${applicable_percentage_amount}%</li>
+    <li>Gross Sales Breakpoint: ${gross_sales_breakpoint_amount_decimal}</li>
+    <li>Reporting Days: ${reporting_days_after_month_words} (${reporting_days_after_month})</li>
+    % endif
+    <li>Fixed Rent Schedule: ${word(yesno(rent_schedule_yn))}</li>
+  </ul>
+
+  <strong><u>COMPENSATION TERMS:</u></strong>
+  <ul>
+    <li>Minimum Compensation Modification: ${word(yesno(modifying_minimum_compensation_yn))}</li>
+    % if modifying_minimum_compensation_yn:
+    <li>Daily Compensation Per Machine: ${minimum_compensation_per_machine_per_day_decimal}</li>
+    % endif
+    <li>Compensation Increases: ${word(yesno(minimum_compensation_increase_yn))}</li>
+    % if minimum_compensation_increase_yn:
+    <li>Percentage Increase: ${percentage_increase_amount_words} (${percentage_increase_amount}%)</li>
+    <li>Effective Date: ${compensation_increase_date}</li>
+    <li>Machine Type Example: ${machine_type_example}</li>
+    <li>Original Meter Price: ${original_meter_price_decimal}</li>
+    <li>New Meter Price: ${new_meter_price_decimal}</li>
+    % endif
+  </ul>
+  
+  <strong><u>ADDITIONAL MODIFICATIONS:</u></strong>
+  <ul>
+    <li>Improvements Required: ${word(yesno(improvements_yn))}</li>
+    % if improvements_yn:
+    <li>Work Description: ${work_to_be_done}</li>
+    % endif
+    <li>Real Estate Tax Changes: ${word(yesno(real_estate_taxes_yn))}</li>
+    % if real_estate_taxes_yn:
+    <li>Tax Base Period: ${tax_base_begin_date} to ${tax_base_end_date}</li>
+    <li>Tax Percentage: ${tax_percentage_amount}% (${tax_percentage_amount_words})</li>
+    % endif
+  </ul>
+  
+  <strong><u>ATTACHED FILES:</u></strong>
+  <ul>
+    % for name in attachment_list: 
+      <li>${name}</li>
+    % endfor
+  </ul>
+
+  % if equipment_removal_list or equipment_installation_list or equipment_upgrade_list:
+  <strong><u>EQUIPMENT CHECKLIST:</u></strong>
+  <form>
+    <div style="margin-left: 20px;">
+      % if equipment_removal_list:
+      <strong>Equipment Removal:</strong><br>
+        % for item in equipment_removal_list:
+      <input type="checkbox" id="remove_${loop.index}"> <label for="remove_${loop.index}">Remove: ${item}</label><br>
+        % endfor
+      % endif
+      % if equipment_installation_list:
+      <strong>Equipment Installation:</strong><br>
+        % for item in equipment_installation_list:
+      <input type="checkbox" id="install_${loop.index}"> <label for="install_${loop.index}">Install: ${item}</label><br>
+        % endfor
+      % endif
+      % if equipment_upgrade_list:
+      <strong>Equipment Upgrades:</strong><br>
+        % for item in equipment_upgrade_list:
+      <input type="checkbox" id="upgrade_${loop.index}"> <label for="upgrade_${loop.index}">Upgrade: ${item}</label><br>
+        % endfor
+      % endif
+    </div>
+  </form>
+  % endif
+
+  <strong><u>EXTENSION AGREEMENT CHECKLIST:</u></strong>
+  <form>
+    <div style="margin-left: 20px;">
+      <input type="checkbox" id="agreement_signed"> <label for="agreement_signed">Agreement executed by all parties</label><br>
+      % if extending_term_yn:
+      <input type="checkbox" id="term_recorded"> <label for="term_recorded">New term dates recorded in system</label><br>
+      % endif
+      % if modifying_rent_yn:
+      <input type="checkbox" id="rent_updated"> <label for="rent_updated">Rent calculation system updated</label><br>
+      % endif
+      % if rent_schedule_yn:
+      <input type="checkbox" id="schedule_updated"> <label for="schedule_updated">Fixed rent schedule implemented</label><br>
+      % endif
+      % if modifying_equipment_yn:
+      <input type="checkbox" id="equipment_completed"> <label for="equipment_completed">Equipment modifications completed</label><br>
+      % endif
+      % if improvements_yn:
+      <input type="checkbox" id="improvements_completed"> <label for="improvements_completed">Improvement work completed</label><br>
+      % endif
+      <input type="checkbox" id="file_updated"> <label for="file_updated">Tenant file updated with new agreement</label><br>
+    </div>
+  </form>  
+  
+  Please retain this email for your records. These values can be used to recreate the documents if needed.
+---
+question: |
+  Where should we send the documents?
+fields:
+  - Email: recipient_email
+    datatype: email
+---
+question: |
+  Documents Sent Successfully
+subquestion: |
+  Your documents have been sent to ${recipient_email}.
+  All generated documents were included in the email.
+event: email_sent
+---
+question: |
+  Error Sending Documents
+subquestion: |
+  There was an error sending your documents to ${recipient_email}.
+  Please try again or contact support if the problem persists.
+event: email_error
+---

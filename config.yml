@@ -1,0 +1,16 @@
+---
+metadata:
+  title: Extension Agreement Generator
+  description: DocAssemble interview for generating License/Lease Extension & Modification Agreements with conditional sections and equipment modifications
+  authors:
+    - ACES Laundry Services
+  revision_date: 2024-12-19
+  version: 1.0
+  required_dependencies: 
+    - num2words                    # For number-to-words conversion
+    - docassemble.base.util       # Core DocAssemble utilities
+  document_outputs:
+    - Extension Agreement (Primary Document)
+    - Interview Summary
+    - Email Notification with Checklists
+---

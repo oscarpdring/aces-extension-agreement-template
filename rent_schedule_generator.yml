@@ -1,0 +1,42 @@
+---
+code: |
+  def create_rent_schedule(annual_amounts_text, start_year=2024):
+    """
+    Create formatted rent schedule from user input
+    """
+    if not annual_amounts_text:
+      return ""
+    
+    amounts = [line.strip() for line in annual_amounts_text.split('\n') if line.strip()]
+    if not amounts:
+      return ""
+    
+    schedule_lines = []
+    for i, amount in enumerate(amounts):
+      try:
+        amount_num = float(amount)
+        year_num = start_year + i
+        amount_decimal = f"${amount_num:,.2f}"
+        amount_words = number_to_words(int(amount_num))
+        schedule_lines.append(f"Year {i+1} ({year_num}): {amount_decimal} ({amount_words} dollars)")
+      except ValueError:
+        schedule_lines.append(f"Year {i+1}: {amount}")
+    
+    return "\n".join(schedule_lines)
+  
+  def format_comma_list(text):
+    """
+    Format list items with proper comma separation
+    """
+    if not text:
+      return ""
+    items = [item.strip() for item in text.split('\n') if item.strip()]
+    if len(items) == 0:
+      return ""
+    elif len(items) == 1:
+      return items[0]
+    elif len(items) == 2:
+      return f"{items[0]} and {items[1]}"
+    else:
+      return ", ".join(items[:-1]) + ", and " + items[-1]
+---

@@ -1,0 +1,5 @@
+---
+modules:
+  - docassemble.base.util
+  - num2words                     # Essential for number formatting
+---

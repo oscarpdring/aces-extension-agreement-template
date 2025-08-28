@@ -1,0 +1,18 @@
+---
+mandatory: True
+question: |
+ Here is your document.
+allow emailing: True
+email template: email_template
+attachment code: |
+ docs_to_show
+---
+attachment:
+ name: Extension Agreement
+ filename: Extension Agreement
+ docx template file: extension_agreement_template.docx
+ valid formats:
+   - pdf
+   - docx
+ variable name: extension_agreement_doc
+---

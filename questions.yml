@@ -1,0 +1,142 @@
+---
+question: Extension Agreement Information
+fields:
+ # BASIC INFORMATION SECTION
+ - Original Agreement Date: original_agreement_date
+   datatype: date
+ - Landlord/Licensor Entity: landlord_entity
+   datatype: text
+ - Tenant/Licensee Entity: tenant_entity
+   datatype: text
+ - Premises Address: premises_address
+   datatype: text
+   
+ # WORD CHOICE VARIABLES
+ - "Agreement Type": agreement_type_choice
+   datatype: radio
+   choices:
+     - License
+     - Lease
+ - "Landlord Role": landlord_role_choice  
+   datatype: radio
+   choices:
+     - Licensor
+     - Lessor
+ - "Tenant Role": tenant_role_choice
+   datatype: radio
+   choices:
+     - Licensee
+     - Lessee
+   
+ # BOOLEAN DECISION POINTS
+ - "Does this agreement involve a guarantor?": good_guy_guaranty_yn
+   datatype: yesnoradio
+ - Guarantor Entity Name: guarantor_entity
+   datatype: text
+   show if: good_guy_guaranty_yn
+   
+ - "Are you extending the lease/license term?": extending_term_yn
+   datatype: yesnoradio
+ - New Expiration Date: extension_expiration_date
+   datatype: date
+   show if: extending_term_yn
+   
+ - "Are you modifying equipment?": modifying_equipment_yn
+   datatype: yesnoradio
+ - "Are you removing equipment?": equipment_removal_yn
+   datatype: yesnoradio
+   show if: modifying_equipment_yn
+ - Equipment to Remove (describe): equipment_removal_details
+   datatype: area
+   required: false
+   show if: equipment_removal_yn
+   help: |
+     Describe equipment to be removed, including quantities and types.
+     Example: "5 washers, 3 dryers"
+ - "Are you installing new equipment?": equipment_installation_yn
+   datatype: yesnoradio
+   show if: modifying_equipment_yn
+ - Equipment to Install (describe): equipment_installation_details
+   datatype: area
+   required: false
+   show if: equipment_installation_yn
+   help: |
+     Describe new equipment to be installed.
+ - "Are you upgrading existing equipment?": equipment_upgrade_yn
+   datatype: yesnoradio
+   show if: modifying_equipment_yn
+ - Equipment to Upgrade (describe): equipment_upgrade_details
+   datatype: area
+   required: false
+   show if: equipment_upgrade_yn
+   help: |
+     Describe equipment upgrades to be performed.
+     
+ - "Are you modifying rent structure?": modifying_rent_yn
+   datatype: yesnoradio
+ - Applicable Percentage (%): applicable_percentage_amount
+   datatype: number
+   show if: modifying_rent_yn
+ - Gross Sales Breakpoint ($): gross_sales_breakpoint_amount
+   datatype: number
+   show if: modifying_rent_yn
+ - Reporting Days After Month End: reporting_days_after_month
+   datatype: number
+   show if: modifying_rent_yn
+   
+ - "Are you using a fixed rent schedule?": rent_schedule_yn
+   datatype: yesnoradio
+ - Annual Rent Amounts (one per line): rent_annual_amounts
+   datatype: area
+   show if: rent_schedule_yn
+   help: |
+     Enter annual rent amounts, one per line, in order by year.
+     Example:
+     50000
+     52000
+     54000
+     
+ - "Are you modifying minimum compensation?": modifying_minimum_compensation_yn
+   datatype: yesnoradio
+ - Minimum Compensation Per Machine Per Day ($): minimum_compensation_per_machine_per_day
+   datatype: number
+   show if: modifying_minimum_compensation_yn
+   
+ - "Are you implementing compensation increases?": minimum_compensation_increase_yn
+   datatype: yesnoradio
+ - Percentage Increase (%): percentage_increase_amount
+   datatype: number
+   show if: minimum_compensation_increase_yn
+ - Increase Effective Date: compensation_increase_date
+   datatype: date
+   show if: minimum_compensation_increase_yn
+ - Machine Type for Example: machine_type_example
+   datatype: text
+   show if: minimum_compensation_increase_yn
+ - Original Meter Price ($): original_meter_price
+   datatype: number
+   show if: minimum_compensation_increase_yn
+ - New Meter Price ($): new_meter_price
+   datatype: number
+   show if: minimum_compensation_increase_yn
+   
+ - "Are there improvements to be made?": improvements_yn
+   datatype: yesnoradio
+ - Work to be Done (describe): work_to_be_done
+   datatype: area
+   show if: improvements_yn
+   help: |
+     Describe all improvement work to be performed.
+     
+ - "Are you modifying real estate taxes?": real_estate_taxes_yn
+   datatype: yesnoradio
+ - Tax Base Period Begin Date: tax_base_begin_date
+   datatype: date
+   show if: real_estate_taxes_yn
+ - Tax Base Period End Date: tax_base_end_date
+   datatype: date
+   show if: real_estate_taxes_yn
+ - Tax Percentage (%): tax_percentage_amount
+   datatype: number
+   show if: real_estate_taxes_yn
+---
